@@ -1,5 +1,6 @@
 require("express-async-errors");
 const winston = require("winston");
+require("winston-mongodb");
 const config = require("config");
 const error = require("./middlewares/error");
 const genres = require("./routers/genres");
@@ -11,6 +12,7 @@ const express = require("express");
 const app = express();
 
 winston.add(winston.transports.File, { filename: 'logfile.log' });
+winston.add(winston.transports.MongoDB, { db: 'mongodb://localhost/vidly' });
 
 if (!config.get('jwtPrivateKey')) {
     console.error('FATAL ERROR!');
