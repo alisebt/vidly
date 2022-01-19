@@ -11,8 +11,14 @@ const index = require("./routers/index");
 const express = require("express");
 const app = express();
 
+process.on('uncaughtException', (ex) => {
+    winston.error(ex.message, ex);
+});
+
 winston.add(winston.transports.File, { filename: 'logfile.log' });
 winston.add(winston.transports.MongoDB, { db: 'mongodb://localhost/vidly' });
+
+throw new Error('something failed');
 
 if (!config.get('jwtPrivateKey')) {
     console.error('FATAL ERROR!');
