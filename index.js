@@ -1,3 +1,5 @@
+require("express-async-errors");
+const winston = require("winston");
 const config = require("config");
 const error = require("./middlewares/error");
 const genres = require("./routers/genres");
@@ -7,6 +9,8 @@ const auth = require("./routers/auth");
 const index = require("./routers/index");
 const express = require("express");
 const app = express();
+
+winston.add(winston.transports.File, { filename: 'logfile.log' });
 
 if (!config.get('jwtPrivateKey')) {
     console.error('FATAL ERROR!');

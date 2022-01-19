@@ -10,6 +10,7 @@ const router = express.Router();
 mongoose.connect('mongodb://localhost/vidly');
 
 router.get('/', async (req, res) => {
+    throw new Error('error happened');
     const result = await User.find().sort({ name: 1 });
     res.send(result);
 });
