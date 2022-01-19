@@ -1,11 +1,12 @@
 const { Movie, validate } = require("../models/movie");
+const { Genre } = require('../models/genre');
 const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
 mongoose.connect('mongodb://localhost/vidly');
 
 router.get('/', async (req, res) => {
-    const result = await Movie.find().sort({ name: 1 });
+    const result = await Movie.find().sort({ title: 1 });
     res.send(result);
 });
 
@@ -22,13 +23,20 @@ router.post('/', async (req, res) => {
     if (error)
         return res.status(400).send(error.details[0].message);
 
+    const genre = await Genre.findById(req.body.genreId);
+    if (!genre)
+        return res.status(400).send('Invalid genre!');
+
     let movie = new Movie({
-        name: req.body.name,
+        title: req.body.title,
         numberInStock: req.body.numberInStock,
-        dailyRetalRate: req.body.dailyRetalRate,
-        genre:
+        dailyRentalPrice: req.body.dailyRentalPrice,
+        genre: {
+            _id: genre._id,
+            name: genre.name
+        }
     });
-    let result = await genre.save();
+    let result = await movie.save();
     return res.send(result);
 })
 
@@ -37,29 +45,39 @@ router.put('/:id', async (req, res) => {
     if (error)
         return res.status(400).send(error.details[0].message);
 
-    const genre = await Movie.findByIdAndUpdate(
+    const genre = await Genre.findById(req.body.genreId);
+    if (!genre)
+        return res.status(400).send('Invalid genre!');
+
+    const movie = await Movie.findByIdAndUpdate(
         req.params.id,
         {
-            name: req.body.name
+            title: req.body.title,
+            numberInStock: req.body.numberInStock,
+            dailyRentalPrice: req.body.dailyRentalPrice,
+            genre: {
+                _id: genre._id,
+                name: genre.name
+            }
         },
         {
             new: true
         }
     );
-    if (!genre)
+    if (!movie)
         return res.status(404).send("Not found");
 
-    return res.send(genre);
+    return res.send(movie);
 })
 
 router.delete('/:id', async (req, res) => {
-    const genre = await Movie.findByIdAndDelete(
+    const movie = await Movie.findByIdAndDelete(
         req.params.id
     );
-    if (!genre)
+    if (!movie)
         return res.status(404).send("Not found");
 
-    return res.send(genre);
+    return res.send(movie);
 })
 
 module.exports = router;
