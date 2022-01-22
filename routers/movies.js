@@ -1,9 +1,7 @@
 const { Movie, validate } = require("../models/movie");
 const { Genre } = require('../models/genre');
-const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
-mongoose.connect('mongodb://localhost/vidly');
 
 router.get('/', async (req, res) => {
     const result = await Movie.find().sort({ title: 1 });

@@ -8,5 +8,6 @@ require("./startup/db")();
 require("./startup/config")();
 require("./startup/validation")();
 
-const port = process.env.PORT || 3001;
-app.listen(port, () => winston.info(`Listenting on ${port}`));
+const port = process.env.PORT || 3000;
+const server = app.listen(port, () => winston.info(`Listenting on ${port}`));
+module.exports = server;

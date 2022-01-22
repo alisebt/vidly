@@ -1,8 +1,6 @@
 const { Genre, validate } = require("../models/genre");
-const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
-mongoose.connect('mongodb://localhost/vidly');
 
 router.get('/', async (req, res) => {
     const result = await Genre.find().sort({ name: 1 });
