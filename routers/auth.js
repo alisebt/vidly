@@ -6,7 +6,6 @@ const { User } = require("../models/user");
 const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
-mongoose.connect('mongodb://localhost/vidly');
 
 router.post('/', async (req, res) => {
     const { error } = validate(req.body);
